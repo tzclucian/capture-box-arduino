@@ -28,7 +28,7 @@ int blueCapture = 0;
 
 int MAX_CAP = 100;
 int MIN_CAP = 0;
-int INC = 10;
+int INC = 1;
 
 // LCD
 LiquidCrystal lcd(0, 1, 8, 9, 10, 11);
