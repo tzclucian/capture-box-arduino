@@ -28,12 +28,7 @@ int blueCapture = 0;
 
 int MAX_CAP = 100;
 int MIN_CAP = 0;
-
-String redPrefix = String();
-String bluePrefix = String();
-
-String redString = String();
-String blueString = String();
+int INC = 10;
 
 // LCD
 LiquidCrystal lcd(0, 1, 8, 9, 10, 11);
@@ -72,11 +67,11 @@ void loop()
     sound();
     
     if (blueCapture > MIN_CAP) {
-      blueCapture--; 
+      blueCapture -= INC; 
     }
     
     if (blueCapture == MIN_CAP && redCapture < MAX_CAP) {
-      redCapture++;
+      redCapture += INC;
     }
   }
   else if (blueButtonValue != 0) {
@@ -85,11 +80,11 @@ void loop()
     sound();
     
     if (redCapture > MIN_CAP) {
-      redCapture--; 
+      redCapture -= INC; 
     }
     
     if (redCapture == MIN_CAP && blueCapture < MAX_CAP) {
-      blueCapture++; 
+      blueCapture += INC; 
     }
   } else if (greenButtonValue) {
     // Green button is being pressed
@@ -100,34 +95,61 @@ void loop()
     noSound();
     
     if (redCapture > MIN_CAP && redCapture < MAX_CAP) {
-      redCapture--; 
+      redCapture -= INC; 
     }
     if (blueCapture > MIN_CAP && blueCapture < MAX_CAP) {
-      blueCapture--; 
+      blueCapture -= INC; 
     }
   }
   
   if (redCapture == MAX_CAP) {
     redLight();
-    redScore++; 
+    redScore += INC; 
   }
   
   if (blueCapture == MAX_CAP) {
     blueLight();
-    blueScore++; 
+    blueScore += INC; 
   }
   
-  // Display the SCORE and CAP for RED
-  redString = "";
-  redString = redPrefix + "R=" + redScore + " %=" + redCapture + " ";
+  // Display the RED score
   lcd.setCursor(0, 0);
-  lcd.print(redString);
+  lcd.print("R=");
+  lcd.setCursor(2, 0);
+  lcd.print(redScore);
   
-  // Display the SCORE and CAP for BLUE
-  blueString = "";
-  blueString = bluePrefix + "B=" + blueScore + " %=" + blueCapture + " ";
-  lcd.setCursor(0,1);
-  lcd.print(blueString);
+  // Display the space between the SCORE and CAPTURE
+  int rScoreChars = getNumberLength(redScore);
+  int rCapChars = getNumberLength(redCapture);
+  for (int i = rScoreChars + 2; i < 16 - rCapChars - 1; i++) {
+    lcd.print("."); 
+  }
+  
+  // Display the RED capture
+  lcd.print(redCapture);
+  lcd.print("%");
+  
+  
+  
+  
+  
+  // Display the BLUE score
+  lcd.setCursor(0, 1);
+  lcd.print("B=");
+  lcd.setCursor(2, 1);
+  lcd.print(blueScore);
+  
+  // Display the space between the SCORE and CAPTURE
+  int bScoreChars = getNumberLength(blueScore);
+  int bCapChars = getNumberLength(blueCapture);
+  for (int i = bScoreChars + 2; i < 16 - bCapChars - 1; i++) {
+    lcd.print("."); 
+  }
+  
+  // Display the BLUE capture
+  lcd.print(blueCapture);
+  lcd.print("%");
+ 
   
   // Delay a bit
   delay(10);
@@ -161,4 +183,17 @@ void greenLight() {
 
 void noLight() {
  setColor(0,0,0); 
+}
+
+int getNumberLength(int x) {
+    if(x>=1000000000) return 10;
+    if(x>=100000000) return 9;
+    if(x>=10000000) return 8;
+    if(x>=1000000) return 7;
+    if(x>=100000) return 6;
+    if(x>=10000) return 5;
+    if(x>=1000) return 4;
+    if(x>=100) return 3;
+    if(x>=10) return 2;
+    return 1;
 }
