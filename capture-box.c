@@ -26,6 +26,9 @@ int blueScore = 0;
 int redCapture = 0;
 int blueCapture = 0;
 
+int MAX_CAP = 100;
+int MIN_CAP = 0;
+
 String redPrefix = String();
 String bluePrefix = String();
 
@@ -68,11 +71,11 @@ void loop()
     redLight();
     sound();
     
-    if (blueCapture > 0) {
+    if (blueCapture > MIN_CAP) {
       blueCapture--; 
     }
     
-    if (blueCapture == 0 && redCapture < 100) {
+    if (blueCapture == MIN_CAP && redCapture < MAX_CAP) {
       redCapture++;
     }
   }
@@ -81,11 +84,11 @@ void loop()
     blueLight();
     sound();
     
-    if (redCapture > 0) {
+    if (redCapture > MIN_CAP) {
       redCapture--; 
     }
     
-    if (redCapture == 0 && blueCapture < 100) {
+    if (redCapture == MIN_CAP && blueCapture < MAX_CAP) {
       blueCapture++; 
     }
   } else if (greenButtonValue) {
@@ -96,28 +99,32 @@ void loop()
   	noLight();
     noSound();
     
-    if (redCapture > 0 && redCapture < 100) {
+    if (redCapture > MIN_CAP && redCapture < MAX_CAP) {
       redCapture--; 
     }
-    if (blueCapture > 0 && blueCapture < 100) {
+    if (blueCapture > MIN_CAP && blueCapture < MAX_CAP) {
       blueCapture--; 
     }
   }
   
-  if (redCapture == 100) {
+  if (redCapture == MAX_CAP) {
+    redLight();
     redScore++; 
   }
   
-  if (blueCapture == 100) {
+  if (blueCapture == MAX_CAP) {
+    blueLight();
     blueScore++; 
   }
   
   // Display the SCORE and CAP for RED
+  redString = "";
   redString = redPrefix + "R=" + redScore + " %=" + redCapture + " ";
   lcd.setCursor(0, 0);
   lcd.print(redString);
   
   // Display the SCORE and CAP for BLUE
+  blueString = "";
   blueString = bluePrefix + "B=" + blueScore + " %=" + blueCapture + " ";
   lcd.setCursor(0,1);
   lcd.print(blueString);
