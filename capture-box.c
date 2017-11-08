@@ -28,6 +28,7 @@ int blueCapture = 0;
 
 int MAX_CAP = 100;
 int MIN_CAP = 0;
+// INCREMENT & DECREMENT
 int INC = 1;
 
 // LCD
@@ -66,23 +67,28 @@ void loop()
     redLight();
     sound();
     
+    // If the BLUE capture is greater than MIN_CAP, decrease it as the RED button was pressed.
     if (blueCapture > MIN_CAP) {
       blueCapture -= INC; 
     }
     
+    // If the BLUE capture is MIN_CAP and RED capture is not MAX_CAP yet increase RED capture
     if (blueCapture == MIN_CAP && redCapture < MAX_CAP) {
       redCapture += INC;
     }
   }
   else if (blueButtonValue != 0) {
     // Blue button is being pressed
+    
     blueLight();
     sound();
     
+    // If the RED capture is greater than MIN_CAP, decrease it as the BLUE button was pressed.
     if (redCapture > MIN_CAP) {
       redCapture -= INC; 
     }
     
+    // If the RED capture is MIN_CAP and BLUE capture is not MAX_CAP yet increase BLUE capture
     if (redCapture == MIN_CAP && blueCapture < MAX_CAP) {
       blueCapture += INC; 
     }
@@ -94,19 +100,24 @@ void loop()
   	noLight();
     noSound();
     
+    // Decrease the RED capture
     if (redCapture > MIN_CAP && redCapture < MAX_CAP) {
       redCapture -= INC; 
     }
+    
+    // Decrease the BLUE capture
     if (blueCapture > MIN_CAP && blueCapture < MAX_CAP) {
       blueCapture -= INC; 
     }
   }
   
+  // If RED capture is at MAX_CAP increase RED score
   if (redCapture == MAX_CAP) {
     redLight();
     redScore += INC; 
   }
   
+  // If BLUE capture is at MAX_CAP increase BLUE score
   if (blueCapture == MAX_CAP) {
     blueLight();
     blueScore += INC; 
@@ -121,17 +132,16 @@ void loop()
   // Display the space between the SCORE and CAPTURE
   int rScoreChars = getNumberLength(redScore);
   int rCapChars = getNumberLength(redCapture);
-  for (int i = rScoreChars + 2; i < 16 - rCapChars - 1; i++) {
+  // Start from 'X=' + the written score
+  // End after 16 chars (total) - capture - '%'
+  for (int i = 2 + rScoreChars; i < 16 - rCapChars - 1; i++) {
     lcd.print("."); 
   }
   
   // Display the RED capture
   lcd.print(redCapture);
   lcd.print("%");
-  
-  
-  
-  
+ 
   
   // Display the BLUE score
   lcd.setCursor(0, 1);
@@ -142,7 +152,9 @@ void loop()
   // Display the space between the SCORE and CAPTURE
   int bScoreChars = getNumberLength(blueScore);
   int bCapChars = getNumberLength(blueCapture);
-  for (int i = bScoreChars + 2; i < 16 - bCapChars - 1; i++) {
+  // Start from 'X=' + the written score
+  // End after 16 chars (total) - capture - '%'
+  for (int i = 2 + bScoreChars; i < 16 - bCapChars - 1; i++) {
     lcd.print("."); 
   }
   
@@ -150,7 +162,6 @@ void loop()
   lcd.print(blueCapture);
   lcd.print("%");
  
-  
   // Delay a bit
   delay(10);
 }
